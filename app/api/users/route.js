@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import db from "@/lib/db";
 import { NextResponse } from "next/server";
 import bcrypt from "bcrypt";
+import db from "@/lib/db";
 export async function POST(request) {
   try {
     //extract the credentials
@@ -27,7 +27,8 @@ export async function POST(request) {
       data: {
         name,
         email,
-        password: hashedPassword,
+        password,
+        hashedPassword,
         role,
       },
     });

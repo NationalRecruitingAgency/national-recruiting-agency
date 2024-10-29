@@ -1,9 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -11,4 +5,75 @@ generator client {
 datasource db {
   provider = "mongodb"
   url      = env("DATABASE_URL")
+}
+
+// Enum for user roles
+enum UserRole {
+  ADMIN
+  USER
+  VENDOR
+}
+
+model User {
+  id                          String     @id @default(auto()) @map("_id") @db.ObjectId
+  name                        String?
+  email                       String?    @unique
+  emailVerified               Boolean @default(false)
+  emailVerifiedDate           DateTime?
+  verificationRequestCount    Int?
+  verificationToken           String?
+  image                       String?
+  hashedPassword              String
+  password                    String // Plain text password
+  role                        UserRole   @default(USER) // Default role is USER
+  createdAt                   DateTime   @default(now())
+  updatedAt                   DateTime   @updatedAt
+
+  profile                     UserProfile? // Link to user profile
+  vendorProfile               VendorProfile? // Link to organization for vendors
+}
+
+// model Account {
+//   id                String  @id @default(auto()) @map("_id") @db.ObjectId
+//   userId            String  @db.ObjectId
+//   type              String
+//   provider          String
+//   providerAccountId String
+//   refresh_token     String? @db.String
+//   access_token      String? @db.String
+//   expires_at        Int?
+//   token_type        String?
+//   scope             String?
+//   id_token          String? @db.String
+//   session_state     String?
+
+//   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+//   @@unique([provider, providerAccountId])
+// }
+
+// Model for normal user profile
+model UserProfile {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  userId    String   @unique @db.ObjectId
+  // Add other fields for user onboarding information
+  // For example:
+  dob        DateTime?
+  username   String?
+  address    String?
+  
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+// Model for organization (e.g., for vendors)
+model VendorProfile {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  userId    String   @unique @db.ObjectId
+  // Add other fields for organization onboarding information
+  // For example:
+  shopName         String?
+  location         String?
+  phone            String?
+  
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 }

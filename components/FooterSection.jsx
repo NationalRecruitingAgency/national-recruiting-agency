@@ -26,7 +26,9 @@ export default function FooterSection() {
             <div>
               <Footer.Title title="about" />
               <Footer.LinkGroup col>
-                <Footer.Link href="#">Flowbite</Footer.Link>
+                <Footer.Link href="/register-vendor">
+                  Register as a vendor
+                </Footer.Link>
                 <Footer.Link href="#">Tailwind CSS</Footer.Link>
               </Footer.LinkGroup>
             </div>

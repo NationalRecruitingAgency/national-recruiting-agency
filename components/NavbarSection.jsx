@@ -3,8 +3,17 @@ import React from "react";
 import { Avatar, Dropdown, Navbar } from "flowbite-react";
 import { BoxIcon } from "lucide-react";
 import Link from "next/link";
+import { useSession } from "next-auth/react";
 export default function NavbarSection() {
-  const isLoggedIn = false;
+  // GETTING DATA IN THE CLIENT COMPONENT
+  const { data: session, status } = useSession();
+  if (status === "loading") {
+    return <p>Loading..........</p>;
+  }
+  if (status === "authenticated") {
+    console.log(session?.user);
+  }
+  // const isLoggedIn = false;
   return (
     <Navbar fluid rounded>
       <Navbar.Brand href="/">
@@ -14,7 +23,7 @@ export default function NavbarSection() {
         </span>
       </Navbar.Brand>
       <div className="flex md:order-2">
-        {isLoggedIn && (
+        {status === "authenticated" && (
           <Dropdown
             arrowIcon={false}
             inline
